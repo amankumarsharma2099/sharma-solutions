@@ -27,7 +27,7 @@ export default function ForgotPasswordPage() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(error.message ?? "Something went wrong");
       return;
     }
     setSent(true);

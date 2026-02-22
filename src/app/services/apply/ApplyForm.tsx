@@ -86,7 +86,7 @@ export function ApplyForm({ service }: { service: Service }) {
           });
         if (error) {
           console.error("Supabase Storage Error:", error);
-          toast.error(error.message || "Upload failed. Please try again.");
+          toast.error(error.message ?? "Upload failed. Please try again.");
           setUploading(false);
           return;
         }
@@ -104,7 +104,7 @@ export function ApplyForm({ service }: { service: Service }) {
       );
 
       if (!result.ok) {
-        toast.error(result.error);
+        toast.error(result.error ?? "Something went wrong");
         setSubmitting(false);
         return;
       }
@@ -113,7 +113,7 @@ export function ApplyForm({ service }: { service: Service }) {
       router.push("/orders");
     } catch (e) {
       console.error(e);
-      toast.error(e instanceof Error ? e.message : "Something went wrong");
+      toast.error(e instanceof Error ? (e.message ?? "Something went wrong") : "Something went wrong");
       setUploading(false);
       setSubmitting(false);
     }
@@ -127,7 +127,7 @@ export function ApplyForm({ service }: { service: Service }) {
       <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-lg shadow-slate-200/50 sm:p-8">
         <div className="flex items-start gap-4">
           <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-100 border border-blue-200">
-            <ServiceIcon name={service.icon} className="h-8 w-8 text-blue-800" />
+            <ServiceIcon name={service.icon ?? null} className="h-8 w-8 text-blue-800" />
           </div>
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-bold text-slate-900">{service.title}</h1>

@@ -15,7 +15,9 @@ const STATUS_OPTIONS: { value: OrderStatus; label: string }[] = [
   { value: "completed", label: "Completed" },
 ];
 
-async function apiUpdateStatus(orderId: string, status: OrderStatus): Promise<{ ok: boolean; error?: string }> {
+type UpdateStatusResult = { ok: true } | { ok: false; error: string };
+
+async function apiUpdateStatus(orderId: string, status: OrderStatus): Promise<UpdateStatusResult> {
   const res = await fetch("/api/admin/orders/update-status", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -23,7 +25,7 @@ async function apiUpdateStatus(orderId: string, status: OrderStatus): Promise<{ 
   });
   const data = await res.json();
   if (!res.ok) return { ok: false, error: data.error ?? "Request failed" };
-  return data.ok ? { ok: true } : { ok: false, error: data.error };
+  return data.ok ? { ok: true } : { ok: false, error: data.error ?? "Request failed" };
 }
 
 async function apiGetSignedUrl(
@@ -37,10 +39,12 @@ async function apiGetSignedUrl(
   });
   const data = await res.json();
   if (!res.ok) return { ok: false, error: data.error ?? "Request failed" };
-  return data.ok ? { ok: true, url: data.url } : { ok: false, error: data.error };
+  return data.ok ? { ok: true, url: data.url } : { ok: false, error: data.error ?? "Request failed" };
 }
 
-async function apiUploadAdminFile(orderId: string, formData: FormData): Promise<{ ok: boolean; error?: string }> {
+type UploadFileResult = { ok: true } | { ok: false; error: string };
+
+async function apiUploadAdminFile(orderId: string, formData: FormData): Promise<UploadFileResult> {
   const body = new FormData();
   body.set("orderId", orderId);
   const file = formData.get("file");
@@ -48,7 +52,7 @@ async function apiUploadAdminFile(orderId: string, formData: FormData): Promise<
   const res = await fetch("/api/admin/orders/upload-file", { method: "POST", body });
   const data = await res.json();
   if (!res.ok) return { ok: false, error: data.error ?? "Request failed" };
-  return data.ok ? { ok: true } : { ok: false, error: data.error };
+  return data.ok ? { ok: true } : { ok: false, error: data.error ?? "Request failed" };
 }
 
 function formatDate(s: string) {
@@ -118,7 +122,7 @@ export function AdminOrdersClient({ orders: ordersProp }: { orders: AdminOrderRo
       router.refresh();
       toast.success("Order status updated");
     } else {
-      toast.error(result.error);
+      toast.error(result.error ?? "Something went wrong");
     }
   };
 
@@ -134,7 +138,7 @@ export function AdminOrdersClient({ orders: ordersProp }: { orders: AdminOrderRo
     if (result.ok) {
       toast.success("File uploaded");
       window.location.reload();
-    } else toast.error(result.error);
+    } else toast.error(result.error ?? "Something went wrong");
   };
 
   if (orders.length === 0) {

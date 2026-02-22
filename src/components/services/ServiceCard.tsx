@@ -26,7 +26,7 @@ export function ServiceCard({
   if (!service?.id) return null;
 
   const { id, title, description, icon, price } = service;
-  const priceNum = price != null && price !== "" ? Number(price) : null;
+  const priceNum = price != null ? Number(price) : null;
   const showPrice = typeof priceNum === "number" && !Number.isNaN(priceNum);
   const applyPath = `/services/apply?service=${encodeURIComponent(id)}`;
   const href = applyHref ?? (isLoggedIn ? applyPath : `/login?redirect=${encodeURIComponent(applyPath)}`);
@@ -35,7 +35,7 @@ export function ServiceCard({
     <Card hover className="flex h-full flex-col">
       <CardHeader className="pb-2">
         <div className="mb-3 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 border border-blue-200">
-          <ServiceIcon name={icon} className="h-6 w-6 text-blue-800" />
+          <ServiceIcon name={icon ?? null} className="h-6 w-6 text-blue-800" />
         </div>
         <CardTitle className="text-lg leading-tight">{title}</CardTitle>
       </CardHeader>

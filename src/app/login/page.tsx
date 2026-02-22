@@ -29,7 +29,7 @@ function LoginForm() {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(error.message ?? "Something went wrong");
       return;
     }
     toast.success("Signed in successfully");

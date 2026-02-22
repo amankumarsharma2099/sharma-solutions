@@ -74,7 +74,7 @@ export function AdminServicesClient({
       toast.success("Service deleted");
       refresh();
     } else {
-      toast.error(result.error);
+      toast.error(result.error ?? "Something went wrong");
     }
   };
 

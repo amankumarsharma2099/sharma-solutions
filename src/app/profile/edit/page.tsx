@@ -53,7 +53,7 @@ export default function EditProfilePage() {
         .update({ full_name: fullName || null, phone: phone || null })
         .eq("id", user.id);
       if (error) {
-        toast.error(error.message);
+        toast.error(error.message ?? "Something went wrong");
         return;
       }
       toast.success("Profile updated");

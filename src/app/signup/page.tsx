@@ -34,7 +34,7 @@ function SignUpForm() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(error.message ?? "Something went wrong");
       return;
     }
     if (data.user && !data.session) {
